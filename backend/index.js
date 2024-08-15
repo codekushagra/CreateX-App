@@ -30,11 +30,19 @@ dotenv.config()
 app.use(express.json())
 app.use("/images",express.static(path.join(__dirname,"/images")))
 app.use(cors({origin:"http://localhost:5173",credentials:true}))
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://createx-app.onrender.com'); // Update this to match your frontend URL
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
+
 app.use(cookieParser())
 app.use("/api/auth",authRoute)
 app.use("/api/users",userRoute)
 app.use("/api/posts",postRoute)
 app.use("/api/comments",commentRoute)
+
 
 //image upload
 const storage=multer.diskStorage({
@@ -52,6 +60,8 @@ app.post("/api/upload",upload.single("file"),(req,res)=>{
     // console.log(req.body)
     res.status(200).json("Image has been uploaded successfully!")
 })
+
+app.options('*', cors(corsOptions)); // Enable pre-flight request for all routes
 
 
 app.listen(process.env.PORT,()=>{

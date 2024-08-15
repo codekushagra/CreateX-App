@@ -55,9 +55,10 @@ const storage = multer.diskStorage({
     fn(null, "images");
   },
   filename: (req, file, fn) => {
-    fn(null, req.body.img);
-    // fn(null, "image1.jpg");
-  }
+  fn(null, file.originalname); // Use the original filename
+}
+
+  
 });
 
 const upload = multer({ storage: storage });

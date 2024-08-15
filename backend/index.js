@@ -31,16 +31,16 @@ app.options('*', cors(corsOptions)); // Enable pre-flight request for all routes
 // Database connection
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL);
+    await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log("MongoDB is connected successfully!");
   } catch (err) {
-    console.log(err);
+    console.error("Database connection error:", err);
   }
 };
 
 // Middlewares
 app.use(express.json());
-app.use("/images", express.static(path.join(__dirname, "/images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(cookieParser());
 
 // Routes
@@ -55,16 +55,18 @@ const storage = multer.diskStorage({
     fn(null, "images");
   },
   filename: (req, file, fn) => {
-  fn(null, file.originalname); // Use the original filename
-}
-
-  
+    fn(null, file.originalname); // Use the original filename
+  }
 });
 
 const upload = multer({ storage: storage });
 app.post("/api/upload", upload.single("file"), (req, res) => {
-  // console.log(req.body);
-  res.status(200).json("Image has been uploaded successfully!");
+  try {
+    res.status(200).json("Image has been uploaded successfully!");
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ message: "Failed to upload image" });
+  }
 });
 
 // Start server

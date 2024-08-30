@@ -49,7 +49,7 @@ const CreatePost = () => {
             data.append("file", file)
             post.photo = filename
             try {
-                const imgUpload = await axios.post(URL + "/api/upload", data)
+                const imgUpload = await axios.post(URL + "/api/upload", data, { withCredentials: true })
             } catch (err) {
                 console.log(err)
             }

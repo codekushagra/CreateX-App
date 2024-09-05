@@ -19,7 +19,7 @@ const corsOptions = {
   origin: 'https://createx-app.onrender.com', // Your production frontend URL
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type,Authorization',
-  credentials: true, // Allow credentials if needed
+  withCredentials: true, // Allow credentials if needed
 };
 
 // Apply CORS middleware
